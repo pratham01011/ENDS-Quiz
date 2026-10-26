@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ED Quiz – Entrepreneurship Development</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0b1a12;
+  --bg2: #112218;
+  --card: #15291e;
+  --card2: #1c3428;
+  --border: #2a4a35;
+  --green: #22c55e;
+  --green2: #16a34a;
+  --greenl: #86efac;
+  --red: #ef4444;
+  --redl: #fca5a5;
+  --yellow: #f59e0b;
+  --yellowl: #fcd34d;
+  --blue: #3b82f6;
+  --bluel: #93c5fd;
+  --purple: #a855f7;
+  --text: #e8f5ee;
+  --text2: #9ab8a8;
+  --text3: #6b9a7e;
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 12px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.wrap { max-width: 760px; margin: 0 auto; }
+
+.hdr { text-align: center; padding: 20px 16px 16px; }
+.hdr .badge {
+  display: inline-block;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.4);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--greenl);
+  margin-bottom: 10px;
+}
+.hdr h1 { font-size: clamp(18px,5vw,26px); font-weight: 800; color: var(--text); line-height: 1.2; }
+.hdr p  { font-size: 13px; color: var(--text2); margin-top: 5px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  animation: fadeUp .3s ease;
+}
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+
+.mode-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:14px; }
+.mode-card { display:flex; align-items:center; gap:12px; background:var(--bg2); border:1.5px solid var(--border); border-radius:12px; padding:13px 14px; cursor:pointer; transition:all .2s; }
+.mode-card:hover { border-color:var(--green); background:var(--card2); }
+.mode-card.selected { border-color:var(--green); background:rgba(34,197,94,.1); }
+.mode-card input { width:18px; height:18px; accent-color:var(--green); flex-shrink:0; cursor:pointer; }
+.mode-card strong { display:block; font-size:13.5px; color:var(--text); }
+.mode-card span { display:block; font-size:12px; color:var(--text2); margin-top:2px; }
+.opt-box { background:var(--bg2); border:1.5px solid var(--border); border-radius:12px; padding:14px; margin-bottom:14px; }
+.opt-box label { font-size:12px; font-weight:700; color:var(--text2); display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:.8px; }
+.opt-box input[type=number], .opt-box input[type=text] { width:100%; padding:10px 14px; background:var(--card); border:1.5px solid var(--border); border-radius:10px; font-size:14px; color:var(--text); }
+.opt-box input:focus { border-color:var(--green); outline:none; }
+.range-row { display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:end; }
+.range-row .dash { color:var(--text3); padding-bottom:10px; font-weight:700; }
+.chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+.chip { padding:6px 12px; border-radius:20px; border:1.5px solid var(--border); background:transparent; color:var(--text2); font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; }
+.chip:hover { border-color:var(--green); color:var(--greenl); }
+.hint { font-size:11.5px; color:var(--text3); margin-top:8px; line-height:1.5; }
+.settings-row input[type=number]{width:100%;padding:10px 14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);}
+#sel-info.err { color:var(--redl) !important; }
+
+#start-screen .card { margin-top: 8px; }
+#start-screen h2 { font-size: 20px; font-weight: 700; color: var(--greenl); margin-bottom: 6px; }
+#start-screen > .card > p { font-size: 13.5px; color: var(--text2); line-height: 1.6; margin-bottom: 22px; }
+
+.tabs { display:flex; gap:6px; margin-bottom:20px; background:var(--bg2); border-radius:12px; padding:5px; }
+.tab-btn {
+  flex:1; padding:9px 6px; border:none; border-radius:9px; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .2s; background:transparent; color:var(--text3);
+}
+.tab-btn.active { background:var(--card2); color:var(--greenl); box-shadow:0 2px 8px rgba(0,0,0,.3); }
+
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+.chapter-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:18px; }
+.chapter-card {
+  display:flex; align-items:flex-start; gap:12px;
+  background:var(--bg2); border:1.5px solid var(--border); border-radius:12px;
+  padding:14px; cursor:pointer; transition:all .2s;
+}
+.chapter-card:hover { border-color:var(--green); background:var(--card2); }
+.chapter-card.selected { border-color:var(--green); background:rgba(34,197,94,.1); }
+.chapter-card input[type=checkbox] { width:18px; height:18px; margin-top:2px; accent-color:var(--green); flex-shrink:0; cursor:pointer; }
+.chapter-info { flex:1; }
+.chapter-info .ch-title { font-size:13.5px; font-weight:700; color:var(--text); }
+.chapter-info .ch-sub   { font-size:12px; color:var(--text2); margin-top:3px; }
+.chapter-info .ch-count { font-size:11px; color:var(--green); margin-top:4px; font-weight:600; }
+
+.sel-all-row { display:flex; gap:8px; margin-bottom:12px; }
+.sel-btn {
+  padding:7px 14px; border-radius:8px; border:1.5px solid var(--border);
+  font-size:12px; font-weight:600; cursor:pointer; background:transparent; color:var(--text2); transition:all .2s;
+}
+.sel-btn:hover { border-color:var(--green); color:var(--greenl); }
+
+.settings-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+@media(max-width:500px) { .settings-row { grid-template-columns:1fr; } }
+.settings-row label { font-size:12px; font-weight:700; color:var(--text2); display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:.8px; }
+.settings-row select, .settings-row input {
+  width:100%; padding:10px 14px; background:var(--bg2); border:1.5px solid var(--border);
+  border-radius:10px; font-size:14px; color:var(--text); appearance:none; -webkit-appearance:none;
+}
+.settings-row select:focus { border-color:var(--green); outline:none; }
+
+.ai-toggle-row {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg2); border:1.5px solid var(--border); border-radius:12px;
+  padding:12px 16px; margin-bottom:18px;
+}
+.ai-toggle-row .ai-info { flex:1; }
+.ai-toggle-row .ai-info strong { font-size:13.5px; color:var(--purple); }
+.ai-toggle-row .ai-info span  { font-size:12px; color:var(--text2); display:block; margin-top:2px; }
+.toggle-switch { position:relative; width:46px; height:26px; flex-shrink:0; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+  background:var(--border); border-radius:26px; transition:.3s;
+}
+.toggle-slider::before {
+  position:absolute; content:""; height:20px; width:20px; left:3px; bottom:3px;
+  background:white; border-radius:50%; transition:.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background:var(--purple); }
+.toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+.start-btn {
+  width:100%; padding:16px; border:none; border-radius:12px;
+  background:linear-gradient(135deg, var(--green2), #0a5f2a);
+  color:#fff; font-size:16px; font-weight:800; cursor:pointer;
+  letter-spacing:.5px; transition:all .2s;
+  box-shadow:0 4px 18px rgba(22,163,74,.4);
+}
+.start-btn:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(22,163,74,.5); }
+.start-btn:active { transform:translateY(0); }
+.start-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+/* AI gen loading screen */
+.ai-gen-screen {
+  display:none; margin-top:8px;
+}
+.ai-gen-card {
+  background:var(--card); border:1px solid rgba(168,85,247,.4); border-radius:var(--radius);
+  padding:40px 24px; text-align:center; box-shadow:var(--shadow);
+}
+.ai-gen-spinner {
+  width:56px; height:56px; border:4px solid var(--border);
+  border-top-color:var(--purple); border-radius:50%;
+  animation:spin .8s linear infinite; margin:0 auto 20px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.ai-gen-card h3 { font-size:17px; color:#c084fc; font-weight:700; margin-bottom:8px; }
+.ai-gen-card p { font-size:13px; color:var(--text2); line-height:1.6; }
+.ai-gen-steps { margin-top:20px; display:flex; flex-direction:column; gap:8px; }
+.ai-step {
+  display:flex; align-items:center; gap:10px;
+  background:var(--bg2); border-radius:10px; padding:10px 14px;
+  font-size:12.5px; color:var(--text3); transition:all .4s;
+}
+.ai-step.active { color:var(--greenl); border:1px solid rgba(34,197,94,.3); background:rgba(34,197,94,.05); }
+.ai-step.done { color:var(--green); }
+.ai-step-icon { font-size:16px; }
+
+#quiz-screen { display:none; margin-top:8px; }
+
+.progress-wrap { margin-bottom:14px; }
+.progress-labels { display:flex; justify-content:space-between; font-size:12.5px; color:var(--text2); margin-bottom:6px; }
+.progress-bar { background:var(--card2); border-radius:20px; height:7px; overflow:hidden; }
+.progress-fill { background:linear-gradient(90deg, var(--green2), var(--green)); height:100%; border-radius:20px; transition:width .4s ease; }
+
+.q-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap; }
+.q-tag { background:rgba(34,197,94,.15); color:var(--greenl); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; border:1px solid rgba(34,197,94,.3); }
+.ai-tag { background:rgba(168,85,247,.15); color:#c084fc; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; border:1px solid rgba(168,85,247,.3); }
+.timer-badge { background:rgba(245,158,11,.15); color:var(--yellowl); font-size:12px; font-weight:700; padding:4px 10px; border-radius:20px; border:1px solid rgba(245,158,11,.3); }
+.timer-badge.danger { background:rgba(239,68,68,.15); color:var(--redl); border-color:rgba(239,68,68,.3); animation:pulse .6s infinite alternate; }
+@keyframes pulse { from{opacity:1} to{opacity:.5} }
+
+.q-chapter-label { font-size:11.5px; color:var(--text3); margin-bottom:10px; font-style:italic; }
+.question-text { font-size:clamp(14.5px,4vw,16.5px); font-weight:600; color:var(--text); line-height:1.6; margin-bottom:18px; }
+
+.options-grid { display:flex; flex-direction:column; gap:9px; }
+.option-btn {
+  display:flex; align-items:center; gap:12px;
+  background:var(--bg2); border:1.5px solid var(--border);
+  border-radius:11px; padding:12px 14px; cursor:pointer;
+  font-size:13.5px; color:var(--text); text-align:left;
+  transition:all .18s; width:100%; line-height:1.45;
+}
+.option-btn:hover:not(:disabled) { border-color:var(--green); background:var(--card2); transform:translateX(3px); }
+.option-btn:disabled { cursor:default; }
+.opt-label {
+  background:var(--card2); color:var(--green); border-radius:7px;
+  font-weight:800; font-size:11.5px; padding:3px 8px;
+  min-width:26px; text-align:center; flex-shrink:0; border:1px solid var(--border);
+}
+.option-btn.correct { background:rgba(34,197,94,.12); border-color:var(--green); }
+.option-btn.correct .opt-label { background:var(--green2); color:#fff; border-color:transparent; }
+.option-btn.wrong { background:rgba(239,68,68,.12); border-color:var(--red); }
+.option-btn.wrong .opt-label { background:var(--red); color:#fff; border-color:transparent; }
+.option-btn.reveal { background:rgba(34,197,94,.08); border-color:rgba(34,197,94,.5); opacity:.8; }
+
+.explanation {
+  margin-top:14px; padding:13px 15px; border-radius:11px;
+  font-size:13px; line-height:1.6; display:none;
+}
+.explanation.ok  { background:rgba(34,197,94,.1); border-left:3px solid var(--green); color:var(--greenl); }
+.explanation.err { background:rgba(245,158,11,.08); border-left:3px solid var(--yellow); color:var(--yellowl); }
+
+.skip-msg {
+  margin-top:12px; padding:10px 14px; background:rgba(245,158,11,.1);
+  border-left:3px solid var(--yellow); border-radius:10px;
+  font-size:12.5px; color:var(--yellowl); display:none;
+}
+
+.btn-row { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.next-btn {
+  flex:1; min-width:120px; padding:13px 20px; border:none; border-radius:11px;
+  background:linear-gradient(135deg, var(--green2), #0a5f2a); color:#fff;
+  font-size:14px; font-weight:700; cursor:pointer; display:none; transition:all .18s;
+}
+.next-btn:hover { transform:translateY(-1px); }
+.skip-btn {
+  flex:1; min-width:100px; padding:12px 20px; border:1.5px solid var(--border);
+  border-radius:11px; background:transparent; color:var(--text2);
+  font-size:13px; cursor:pointer; transition:all .18s;
+}
+.skip-btn:hover { border-color:var(--text3); color:var(--text); }
+
+#score-screen { display:none; margin-top:8px; }
+
+.score-card { text-align:center; }
+.score-emoji { font-size:56px; margin-bottom:10px; }
+.score-title { font-size:22px; font-weight:800; color:var(--greenl); }
+.score-sub   { font-size:13.5px; color:var(--text2); margin:6px 0 22px; }
+
+.score-ring-wrap { display:flex; justify-content:center; margin-bottom:22px; }
+.score-ring {
+  width:130px; height:130px; border-radius:50%;
+  background: conic-gradient(var(--green) var(--pct, 0%), var(--card2) 0);
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.score-ring::before {
+  content:''; width:92px; height:92px; background:var(--card);
+  border-radius:50%; position:absolute;
+}
+.score-num { font-size:26px; font-weight:900; color:var(--greenl); position:relative; z-index:1; }
+
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+@media(max-width:400px) { .stats-row { grid-template-columns:repeat(2,1fr); } }
+.stat-box { border-radius:12px; padding:12px 8px; text-align:center; }
+.stat-box .sval { font-size:22px; font-weight:900; }
+.stat-box .slbl { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-top:3px; }
+.stat-box.g { background:rgba(34,197,94,.12); } .stat-box.g .sval,.stat-box.g .slbl { color:var(--green); }
+.stat-box.r { background:rgba(239,68,68,.12); } .stat-box.r .sval,.stat-box.r .slbl { color:var(--red); }
+.stat-box.y { background:rgba(245,158,11,.12); } .stat-box.y .sval,.stat-box.y .slbl { color:var(--yellow); }
+.stat-box.b { background:rgba(59,130,246,.12); } .stat-box.b .sval,.stat-box.b .slbl { color:var(--blue); }
+
+.unit-breakdown { text-align:left; margin:0 0 20px; }
+.unit-breakdown h4 { font-size:13px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.8px; margin-bottom:10px; }
+.unit-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+.unit-name { font-size:12px; color:var(--text2); width:90px; flex-shrink:0; }
+.unit-bar-wrap { flex:1; background:var(--card2); border-radius:20px; height:7px; overflow:hidden; }
+.unit-bar { height:100%; border-radius:20px; background:var(--green2); }
+.unit-pct { font-size:11px; color:var(--green); font-weight:700; width:32px; text-align:right; flex-shrink:0; }
+
+.action-btns { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.action-btns button {
+  flex:1; min-width:110px; padding:13px 14px; border-radius:11px; font-size:13px;
+  font-weight:700; cursor:pointer; transition:all .18s; border:none;
+}
+.btn-primary { background:linear-gradient(135deg, var(--green2), #0a5f2a); color:#fff; box-shadow:0 4px 14px rgba(22,163,74,.35); }
+.btn-primary:hover { transform:translateY(-1px); }
+.btn-outline { background:transparent; color:var(--greenl); border:1.5px solid var(--green) !important; }
+.btn-outline:hover { background:rgba(34,197,94,.08); }
+
+.review-section { text-align:left; margin-top:8px; }
+.review-section h3 { font-size:14px; font-weight:700; color:var(--text2); margin-bottom:12px; text-align:center; text-transform:uppercase; letter-spacing:.8px; }
+.review-item {
+  background:var(--bg2); border:1.5px solid var(--border); border-radius:11px;
+  padding:13px; margin-bottom:9px; font-size:12.5px;
+}
+.review-item.rw { background:rgba(239,68,68,.07); border-color:rgba(239,68,68,.3); }
+.review-item.rs { background:rgba(245,158,11,.07); border-color:rgba(245,158,11,.3); }
+.review-item .rq  { font-weight:600; color:var(--text); margin-bottom:6px; line-height:1.5; }
+.review-item .rc  { color:var(--green); }
+.review-item .ryr { color:var(--red); }
+.review-item .rsk { color:var(--yellow); }
+.review-item .runit { font-size:11px; color:var(--text3); margin-top:4px; }
+
+hr.div { border:none; border-top:1px solid var(--border); margin:18px 0; }
+
+.toast {
+  position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-80px);
+  background:var(--card2); border:1px solid var(--border); border-radius:12px;
+  padding:11px 20px; font-size:13px; color:var(--text); z-index:999;
+  transition:transform .35s ease; pointer-events:none; white-space:nowrap;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.good { border-color:var(--green); color:var(--greenl); }
+.toast.bad  { border-color:var(--red); color:var(--redl); }
+
+@media(max-width:540px) {
+  .card { padding:20px 16px; }
+  .chapter-card { padding:11px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="badge">💼 ED Mock Test · Entrepreneurship Development</div>
+  <h1>Entrepreneurship Development</h1>
+  <p>100 question bank + ✨ fresh AI-generated questions every session</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="card">
+    <h2>Configure Your Quiz 🎯</h2>
+    <p>Choose which questions to practise (all, a range, or custom numbers), set the timer, and enable AI to get fresh unique questions every session.</p>
+
+    <div class="mode-grid">
+      <label class="mode-card selected" id="mode-all">
+        <input type="radio" name="mode" value="all" checked onchange="setMode('all')">
+        <div><strong>📚 All Questions</strong><span>Every question, 1 to 100</span></div>
+      </label>
+      <label class="mode-card" id="mode-range">
+        <input type="radio" name="mode" value="range" onchange="setMode('range')">
+        <div><strong>🔢 Select Range</strong><span>Pick a from–to range, e.g. 20 to 30</span></div>
+      </label>
+      <label class="mode-card" id="mode-custom">
+        <input type="radio" name="mode" value="custom" onchange="setMode('custom')">
+        <div><strong>✏️ Customizable</strong><span>Type your own, e.g. 1-10, 25, 40-50</span></div>
+      </label>
+    </div>
+
+    <div class="opt-box" id="range-box" style="display:none">
+      <div class="range-row">
+        <div><label>From Q.No.</label><input type="number" id="range-from" min="1" max="100" value="1" oninput="updateSelInfo()"></div>
+        <div class="dash">–</div>
+        <div><label>To Q.No.</label><input type="number" id="range-to" min="1" max="100" value="30" oninput="updateSelInfo()"></div>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="setRange(1,25)">1–25</button>
+        <button class="chip" onclick="setRange(26,50)">26–50</button>
+        <button class="chip" onclick="setRange(51,75)">51–75</button>
+        <button class="chip" onclick="setRange(76,100)">76–100</button>
+        <button class="chip" onclick="setRange(1,50)">1–50</button>
+        <button class="chip" onclick="setRange(51,100)">51–100</button>
+      </div>
+    </div>
+
+    <div class="opt-box" id="custom-box" style="display:none">
+      <label>Question numbers</label>
+      <input type="text" id="custom-input" placeholder="e.g. 1-10, 25, 40-50, 88" oninput="updateSelInfo()">
+      <div class="hint">Use commas to separate. Use a dash for ranges (e.g. <b>5-12</b>). Valid numbers: 1 to 100.</div>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <label>📋 Number of Questions</label>
+        <select id="num-qs" onchange="onNumChange()">
+          <option value="0" selected>All selected</option>
+          <option value="5">5 Questions</option>
+          <option value="10">10 Questions</option>
+          <option value="15">15 Questions</option>
+          <option value="20">20 Questions</option>
+          <option value="25">25 Questions</option>
+          <option value="30">30 Questions</option>
+          <option value="50">50 Questions</option>
+          <option value="75">75 Questions</option>
+          <option value="custom">Custom number…</option>
+        </select>
+        <input type="number" id="num-custom" min="1" max="100" placeholder="Enter number" style="display:none;margin-top:8px" oninput="updateSelInfo()">
+      </div>
+      <div>
+        <label>⏱️ Time per Question</label>
+        <select id="timer-opt">
+          <option value="0">No Timer</option>
+          <option value="20">20 seconds</option>
+          <option value="30" selected>30 seconds</option>
+          <option value="45">45 seconds</option>
+          <option value="60">60 seconds</option>
+        </select>
+      </div>
+      <div>
+        <label>🔀 Question Order</label>
+        <select id="order-opt">
+          <option value="shuffle" selected>Shuffled</option>
+          <option value="seq">In order (by Q.No.)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="ai-toggle-row" id="ai-row" style="display:none">
+      <div class="ai-info">
+        <strong>🤖 AI Question Generation</strong>
+        <span>Claude AI generates fresh, unique questions every session</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="ai-toggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div id="ai-count-row" style="display:none; margin-bottom:18px;">
+      <div class="settings-row" style="margin-bottom:0">
+        <div>
+          <label>🤖 AI Questions to Generate</label>
+          <select id="ai-count">
+            <option value="5">5 AI questions</option>
+            <option value="10" selected>10 AI questions</option>
+            <option value="15">15 AI questions</option>
+            <option value="20">20 AI questions</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="start-btn" id="start-btn" onclick="startQuiz()">🚀 Start Quiz</button>
+    <p id="sel-info" style="text-align:center; font-size:12px; color:var(--text3); margin-top:10px;"></p>
+  </div>
+</div>
+
+<!-- AI GENERATION LOADING SCREEN -->
+<div id="ai-gen-screen" class="ai-gen-screen">
+  <div class="ai-gen-card">
+    <div class="ai-gen-spinner"></div>
+    <h3>✨ Generating AI Questions…</h3>
+    <p>Claude AI is crafting unique Entrepreneurship Development questions just for this session</p>
+    <div class="ai-gen-steps">
+      <div class="ai-step active" id="step1"><span class="ai-step-icon">🧠</span> Analyzing selected units & topics</div>
+      <div class="ai-step" id="step2"><span class="ai-step-icon">✍️</span> Writing conceptual & application questions</div>
+      <div class="ai-step" id="step3"><span class="ai-step-icon">✅</span> Verifying answers & explanations</div>
+      <div class="ai-step" id="step4"><span class="ai-step-icon">🚀</span> Mixing AI questions into your quiz</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen">
+  <div class="progress-wrap">
+    <div class="progress-labels">
+      <span id="prog-text">Question 1 of 30</span>
+      <span id="score-live">Score: 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="q-meta">
+      <span class="q-tag" id="q-label">Q1</span>
+      <span id="ai-badge" class="ai-tag" style="display:none">✨ AI Generated</span>
+      <span class="timer-badge" id="timer-badge" style="display:none">⏱ 30s</span>
+    </div>
+    <div class="q-chapter-label" id="q-chapter-label"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="explanation" id="explanation"></div>
+    <div class="skip-msg" id="skip-msg">⏩ Skipped — correct answer: <strong id="skip-ans"></strong></div>
+    <div class="btn-row">
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next →</button>
+      <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">Skip</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCORE SCREEN -->
+<div id="score-screen">
+  <div class="card score-card">
+    <div class="score-emoji" id="res-emoji">💼</div>
+    <div class="score-title" id="res-title">Well done!</div>
+    <div class="score-sub" id="res-sub"></div>
+
+    <div class="score-ring-wrap">
+      <div class="score-ring" id="score-ring">
+        <div class="score-num" id="score-pct-txt">0%</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box g"><div class="sval" id="st-c">0</div><div class="slbl">✅ Correct</div></div>
+      <div class="stat-box r"><div class="sval" id="st-w">0</div><div class="slbl">❌ Wrong</div></div>
+      <div class="stat-box y"><div class="sval" id="st-s">0</div><div class="slbl">⏩ Skipped</div></div>
+      <div class="stat-box b"><div class="sval" id="st-t">0</div><div class="slbl">📋 Total</div></div>
+    </div>
+
+    
+    <div class="action-btns">
+      <button class="btn-primary" onclick="restartQuiz()">🔄 New Quiz</button>
+      <button class="btn-outline" onclick="toggleReview()">📖 Review</button>
+    </div>
+
+    <div class="review-section" id="review-section" style="display:none">
+      <hr class="div">
+      <h3>Answer Review</h3>
+      <div id="review-list"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const AI_TOPICS = 'Entrepreneurship fundamentals & traits, calculated risk, enterprise types, product life cycle, market survey & sampling, plant location & layout, MSME classification, PMEGP, DIC, SIDBI, NI-MSME, break-even point, ROI, ROS, capital & working capital budget, sensitivity analysis, business plan, ownership forms, marketing mix, USP, negotiation (BATNA), angel/VC/bootstrapping, burn rate & runway, pricing strategy';
+
+/* ═══════════════════════════════════
+   QUESTION DATABASE
+═══════════════════════════════════ */
+const ALL_QUESTIONS = [
+{"unit": 1, "q": "Which of the following is considered an intrinsic reward (charm) of choosing entrepreneurship over salaried employment?", "a": "Guaranteed steady income from day one", "b": "Complete immunity from business losses", "c": "High degree of autonomy and decision-making independence", "d": "Fixed 8-hour workday schedules", "ans": "C"},
+{"unit": 1, "q": "The scope of an enterprise targeting exclusively local geographical boundaries is primarily constrained by:", "a": "International tariffs", "b": "Foreign exchange rate fluctuations", "c": "Local purchasing power and narrow consumer demographics", "d": "Global intellectual property treaties", "ans": "C"},
+{"unit": 1, "q": "An entrepreneur who continues to pursue market validation despite repeated initial product rejections demonstrates:", "a": "Consistency", "b": "Persistence", "c": "Assertiveness", "d": "Information seeking", "ans": "B"},
+{"unit": 1, "q": "An entrepreneur conducting extensive customer interviews and competitive benchmarking prior to product launch exemplifies which trait?", "a": "Persuasion", "b": "Information seeking", "c": "Risk avoidance", "d": "Independent decision making", "ans": "B"},
+{"unit": 1, "q": "How does a ‘calculated risk-taker’ differ from a ‘gambler’?", "a": "A calculated risk-taker avoids any possibility of loss", "b": "A calculated risk-taker assesses probabilities, prepares contingencies, and mitigates identifiable exposure", "c": "A calculated risk-taker leaves results to market luck", "d": "A calculated risk-taker only invests non-equity capital", "ans": "B"},
+{"unit": 1, "q": "Which entrepreneurial trait involves standing firm on business terms while maintaining respect for the counterparty?", "a": "Assertiveness", "b": "Aggressiveness", "c": "Submissiveness", "d": "Rigidness", "ans": "A"},
+{"unit": 1, "q": "A business entity that purchases finished goods from producers in bulk and resells them in smaller quantities to retailers is classified as a:", "a": "Manufacturing enterprise", "b": "Service enterprise", "c": "Trading (Wholesale) enterprise", "d": "Ancillary industrial unit", "ans": "C"},
+{"unit": 1, "q": "Which of the following operations is classified under a ‘Service Enterprise’?", "a": "Injection molding workshop producing plastic bottles", "b": "Mobile phone repair and software troubleshooting center", "c": "Ready-made garment wholesale distributor", "d": "Agro-processing sugar refinery", "ans": "B"},
+{"unit": 1, "q": "A manufacturing enterprise is characterized by:", "a": "Physical transformation of raw materials into finished utility products", "b": "Zero inventory management requirements", "c": "Purely intangible customer deliverables", "d": "Complete absence of plant and machinery investments", "ans": "A"},
+{"unit": 1, "q": "What is a key disadvantage faced by an entrepreneur during the early stages of a venture?", "a": "Excessively high dividends", "b": "Financial uncertainty and irregular cash flow", "c": "Lack of business control", "d": "Inability to introduce innovations", "ans": "B"},
+{"unit": 1, "q": "Which enterprise type typically carries the highest inventory spoilage and holding cost risk?", "a": "Software consulting agency", "b": "Perishable food manufacturing and distribution unit", "c": "Technical training institute", "d": "Patent law consultancy", "ans": "B"},
+{"unit": 1, "q": "When an entrepreneur learns from failures, the primary behavioral adjustment is:", "a": "Abandoning all entrepreneurial activity entirely", "b": "Refusing to adopt new technologies", "c": "Root-cause post-mortem analysis followed by strategic pivoting", "d": "Blaming market conditions without updating internal processes", "ans": "C"},
+{"unit": 1, "q": "‘Commitment to work contract’ in an entrepreneurial setting means:", "a": "Passing project blame onto subcontractors", "b": "Prioritizing customer delivery and specifications even at temporary personal or operational cost", "c": "Terminating contracts whenever margin targets shrink", "d": "Delegating all accountability to shop-floor technicians", "ans": "B"},
+{"unit": 1, "q": "The scope of a global enterprise is enabled primarily by:", "a": "Strict reliance on local currency credit lines", "b": "Digital connectivity, scalable logistics, and international trade agreements", "c": "Limiting marketing to vernacular print publications", "d": "Disregarding international quality certifications", "ans": "B"},
+{"unit": 1, "q": "An entrepreneur negotiating payment terms with suppliers without yielding critical operational liquidity is practicing:", "a": "Consistency", "b": "Persuasion and business communication", "c": "High risk avoidance", "d": "Production planning", "ans": "B"},
+{"unit": 1, "q": "Which of the following is an example of strategic risk in a startup?", "a": "A power outage on the factory floor for 2 hours", "b": "Entering a saturated market with an obsolete technological architecture", "c": "Minor delay in raw material freight due to local traffic", "d": "Temporary clerical errors in invoice ledger entries", "ans": "B"},
+{"unit": 1, "q": "A trading enterprise generally requires:", "a": "Extensive heavy factory fabrication machinery", "b": "Working capital for inventory and efficient distribution channels", "c": "Decades of proprietary laboratory R&D", "d": "High patenting and copyright expenditures", "ans": "B"},
+{"unit": 1, "q": "Self-analysis tools such as SWOT analysis help prospective entrepreneurs identify:", "a": "Universal product retail prices", "b": "Internal strengths/weaknesses and external opportunities/threats", "c": "Direct stock market valuations", "d": "Statutory tax brackets of suppliers", "ans": "B"},
+{"unit": 1, "q": "In contrast to an employee, an entrepreneur’s financial returns are:", "a": "Fixed and protected by labor acts", "b": "Residual, uncapped, and performance-dependent", "c": "Non-taxable", "d": "Guaranteed on the final day of each calendar month", "ans": "B"},
+{"unit": 1, "q": "An entrepreneur demonstrating ‘Initiative’ is one who:", "a": "Waits for client instructions before innovating", "b": "Takes proactive actions before being forced to by events or competitors", "c": "Follows industry standards strictly without variation", "d": "Avoids introducing any untried products", "ans": "B"},
+{"unit": 1, "q": "Which risk type stems directly from fluctuations in interest rates, credit availability, and currency exchange?", "a": "Environmental risk", "b": "Financial risk", "c": "Operational risk", "d": "Legal risk", "ans": "B"},
+{"unit": 1, "q": "A service enterprise differs from a manufacturing enterprise primarily because services are:", "a": "Tangible, separable, and storable", "b": "Intangible, inseparable, variable, and perishable", "c": "Dependent strictly on automated assembly lines", "d": "Free from customer interaction", "ans": "B"},
+{"unit": 1, "q": "Creative problem solving in entrepreneurship helps founders:", "a": "Evade commercial taxes legally", "b": "Identify novel, resource-efficient solutions to customer pain points", "c": "Eliminate all market competitors instantly", "d": "Disregard accounting balance sheets", "ans": "B"},
+{"unit": 1, "q": "Independent decision-making requires an entrepreneur to:", "a": "Reject all advice from subject matter experts", "b": "Assume sole responsibility for directional choices after evaluating data", "c": "Delay all decisions until unanimous agreement is achieved", "d": "Shift final accountability to board advisors", "ans": "B"},
+{"unit": 1, "q": "Technological obsolescence is a major risk categorized under:", "a": "Operational/Technical risk", "b": "Statutory compliance risk", "c": "Ethical risk", "d": "Employee welfare risk", "ans": "A"},
+{"unit": 1, "q": "An organization’s unique bundle of skills, technologies, and processes that provides a defensible competitive edge is called:", "a": "Plant layout", "b": "Core competence", "c": "Ancillary dependency", "d": "Variable margin", "ans": "B"},
+{"unit": 2, "q": "What is the correct sequence of stages in the standard Product Life Cycle (PLC)?", "a": "Growth -> Introduction -> Decline -> Maturity", "b": "Introduction -> Growth -> Maturity -> Decline", "c": "Maturity -> Growth -> Introduction -> Decline", "d": "Introduction -> Maturity -> Growth -> Decline", "ans": "B"},
+{"unit": 2, "q": "In the Product Mortality Curve, the sharpest reduction in ideas occurs during which phase?", "a": "Commercial product roll-out", "b": "Initial idea screening and concept evaluation", "c": "Mass warehouse distribution", "d": "Post-launch customer service", "ans": "B"},
+{"unit": 2, "q": "Which stage of the Technology Life Cycle (TLC) requires maximum R&D expenditure with minimal or zero immediate revenue?", "a": "Bleeding Edge / Research & Development phase", "b": "Growth / Ascending phase", "c": "Mature plateau phase", "d": "Substitution / Decay phase", "ans": "A"},
+{"unit": 2, "q": "Which factor is most critical when selecting an industrial location for a heavy cement manufacturing plant?", "a": "Proximity to luxury lifestyle retail malls", "b": "Proximity to limestone raw material reserves and heavy rail transport infrastructure", "c": "Availability of ultra-high-speed fiber broadband only", "d": "Downtown pedestrian foot traffic", "ans": "B"},
+{"unit": 2, "q": "In a manufacturing plant, efficient ‘Material Handling’ layout primarily aims to:", "a": "Increase the distance materials travel inside the shop floor", "b": "Minimize material travel time, bottlenecks, and internal transport costs", "c": "Maximize manual labor usage over automated rollers", "d": "Store raw inventory directly adjacent to administrative executive suites", "ans": "B"},
+{"unit": 2, "q": "What is the primary purpose of a pilot questionnaire test in a market survey?", "a": "Finalizing fiscal year corporate tax filings", "b": "Identifying ambiguous, confusing, or leading questions before full deployment", "c": "Direct selling of inventory units to survey takers", "d": "Fulfilling factory labor compliance norms", "ans": "B"},
+{"unit": 2, "q": "Sampling where every individual in the defined population has a known, non-zero probability of selection is:", "a": "Convenience sampling", "b": "Quota sampling", "c": "Probability / Random sampling", "d": "Judgemental sampling", "ans": "C"},
+{"unit": 3, "q": "What does the acronym MCED stand for in Maharashtra’s industrial ecosystem?", "a": "Municipal Corporation for Electronic Development", "b": "Maharashtra Centre for Entrepreneurship Development", "c": "Mega Capital for Enterprise Distribution", "d": "Maharashtra Council for Educational Degrees", "ans": "B"},
+{"unit": 3, "q": "NI-MSME (National Institute for Micro, Small and Medium Enterprises) is an apex national institute located at:", "a": "New Delhi", "b": "Hyderabad", "c": "Mumbai", "d": "Kolkata", "ans": "B"},
+{"unit": 3, "q": "Under the PMEGP scheme, what is the key financial mechanism provided to new entrepreneurs?", "a": "100% venture capital buyout", "b": "Credit-linked capital subsidy for project setup", "c": "Unconditional interest-free corporate bonds", "d": "Direct supply of factory machinery free of cost", "ans": "B"},
+{"unit": 3, "q": "What is the nodal implementing agency for the PMEGP scheme at the national level?", "a": "Reserve Bank of India (RBI)", "b": "Khadi and Village Industries Commission (KVIC)", "c": "Central Board of Direct Taxes (CBDT)", "d": "Securities and Exchange Board of India (SEBI)", "ans": "B"},
+{"unit": 3, "q": "The District Industries Centre (DIC / DI) operates primarily to:", "a": "Manage international offshore stock exchanges", "b": "Provide single-window facilitation, registration, and industrial assistance at the district level", "c": "Formulate national foreign exchange policy", "d": "Supervise commercial airline routes", "ans": "B"},
+{"unit": 2, "q": "Primary market research data is collected through:", "a": "Published national census archives from ten years ago", "b": "Directly administered surveys, interviews, and direct field observations", "c": "Competitor balance sheets downloaded from public libraries", "d": "Industry trade journals published five years prior", "ans": "B"},
+{"unit": 4, "q": "Which transformation cost includes depreciation of plant machinery, electricity, and shop floor supplies?", "a": "Direct material acquisition cost", "b": "Conversion / Manufacturing overhead cost", "c": "Corporate income tax expenses", "d": "Shareholder dividend payout", "ans": "B"},
+{"unit": 2, "q": "In the New Product Development (NPD) funnel, what stage immediately follows ‘Concept Generation and Screening’?", "a": "Commercial product retirement", "b": "Concept Development and Testing", "c": "Nationwide mass media marketing", "d": "Liquidation of obsolete inventories", "ans": "B"},
+{"unit": 2, "q": "Which location factor dominates for an e-commerce fast-delivery grocery hub?", "a": "Remote rural wilderness with zero population", "b": "Dense urban neighborhood proximity to optimize the last-mile radius", "c": "Proximity to mining belts", "d": "International oceanic deep-sea ports", "ans": "B"},
+{"unit": 2, "q": "What is a ‘Closed-ended question’ in a market survey questionnaire?", "a": "A question allowing unconstrained, lengthy essay answers", "b": "A question with predefined, standardized response choices (e.g., Likert scale, Yes/No)", "c": "A question that the respondent is legally barred from reading", "d": "An unrecorded telephonic conversation", "ans": "B"},
+{"unit": 2, "q": "A continuous process manufacturing layout is best suited for:", "a": "Custom bespoke wedding gowns", "b": "Standardized chemical petroleum refining and bulk sugar production", "c": "Fine handmade wooden sculptures", "d": "Customized interior decoration projects", "ans": "B"},
+{"unit": 3, "q": "Which agency promotes non-farm, rural, and traditional craft-based micro-enterprises in India?", "a": "ISRO", "b": "KVIC", "c": "SEBI", "d": "TRAI", "ans": "B"},
+{"unit": 2, "q": "Qualitative data analysis in market research focuses on:", "a": "Mean, median, standard deviation, and variance calculations", "b": "Consumer sentiments, perceptions, underlying motivations, and thematic feedback", "c": "Purely double-entry balance sheet ledgers", "d": "Automated sensor voltage readings", "ans": "B"},
+{"unit": 2, "q": "When selecting a product, the ‘degree of value addition’ represents:", "a": "The final selling price divided by the number of factory employees", "b": "The difference between the cost of raw material inputs and the market price of the finished product", "c": "Total accumulated commercial tax dues", "d": "Total machine shipping weight", "ans": "B"},
+{"unit": 2, "q": "In the Maturity stage of the Product Life Cycle, marketing strategy shifts toward:", "a": "Creating baseline category awareness among innovators", "b": "Defending market share, brand differentiation, and optimizing margins against stiff competition", "c": "Ceasing all marketing and withdrawing from sales distribution", "d": "Tripling production costs", "ans": "B"},
+{"unit": 2, "q": "Which of the following is an example of a convenience sampling method?", "a": "Selecting every 10th name on a verified voter registry", "b": "Interviewing passersby at an entrance of an accessible shopping mall", "c": "Using stratified population cohorts across five income bands", "d": "Running computer-generated random number generators across all phone numbers", "ans": "B"},
+{"unit": 2, "q": "Innovation in product modification involves:", "a": "Copying a competitor’s exact trademark illegally", "b": "Improving functional utility, energy efficiency, materials, or UX of an existing product", "c": "Freezing all design improvements indefinitely", "d": "Lowering manufacturing quality to maximize returns unilaterally", "ans": "B"},
+{"unit": 3, "q": "According to the revised composite criteria (effective from 2020), a ‘Micro’ enterprise is defined by:", "a": "Investment <= Rs 1 Crore and Annual Turnover <= Rs 5 Crore", "b": "Investment <= Rs 10 Crore and Annual Turnover <= Rs 50 Crore", "c": "Investment <= Rs 50 Crore and Annual Turnover <= Rs 250 Crore", "d": "Investment <= Rs 25 Lakhs with zero turnover ceiling", "ans": "A"},
+{"unit": 3, "q": "Under the MSME categorization criteria, what are the thresholds for a ‘Small’ enterprise?", "a": "Investment <= Rs 1 Crore and Turnover <= Rs 5 Crore", "b": "Investment <= Rs 10 Crore and Turnover <= Rs 50 Crore", "c": "Investment <= Rs 50 Crore and Turnover <= Rs 250 Crore", "d": "Investment <= Rs 100 Crore and Turnover <= Rs 500 Crore", "ans": "B"},
+{"unit": 3, "q": "What are the composite classification thresholds for a ‘Medium’ enterprise?", "a": "Investment <= Rs 10 Crore and Turnover <= Rs 50 Crore", "b": "Investment <= Rs 50 Crore and Turnover <= Rs 250 Crore", "c": "Investment <= Rs 5 Crore and Turnover <= Rs 25 Crore", "d": "Investment <= Rs 20 Crore and Turnover <= Rs 100 Crore", "ans": "B"},
+{"unit": 3, "q": "In the calculation of annual turnover for MSME classification, which of the following is explicitly EXCLUDED?", "a": "Total domestic retail sales", "b": "Export turnover of goods and services", "c": "Inter-state B2B sales", "d": "Online website sales", "ans": "B"},
+{"unit": 3, "q": "An ‘Ancillary Industrial Unit’ is predominantly characterized by:", "a": "Direct trading of foreign consumer electronics", "b": "Supplying a substantial percentage (typically at least 50%) of its manufactured components/sub-assemblies to a parent unit", "c": "Sole operation in agro-horticultural produce", "d": "Total independence from any large-scale parent manufacturer", "ans": "B"},
+{"unit": 4, "q": "What is the fundamental formula to calculate the Break-Even Point (BEP) in physical units?", "a": "BEP (units) = Total Variable Cost / Selling Price per Unit", "b": "BEP (units) = Fixed Costs / (Selling Price per Unit - Variable Cost per Unit)", "c": "BEP (units) = Net Profit / Total Assets", "d": "BEP (units) = (Fixed Costs + Variable Costs) / Sales Revenue", "ans": "B"},
+{"unit": 4, "q": "The difference between the Selling Price per Unit and the Variable Cost per Unit is termed:", "a": "Gross overhead", "b": "Unit contribution margin", "c": "Retained earning", "d": "Sunk investment", "ans": "B"},
+{"unit": 4, "q": "If a company incurs Rs 2,00,000 in Fixed Costs, has a Selling Price of Rs 50 per unit, and a Variable Cost of Rs 30 per unit, what is the BEP in units?", "a": "5,000 units", "b": "10,000 units", "c": "20,000 units", "d": "4,000 units", "ans": "B"},
+{"unit": 4, "q": "What does the Break-Even Point represent for an enterprise?", "a": "The sales level where profits are maximized", "b": "The sales level where total revenue exactly equals total costs (Zero profit, zero loss)", "c": "The point where the enterprise exhausts its working capital", "d": "The statutory tax threshold", "ans": "B"},
+{"unit": 4, "q": "How is Return on Investment (ROI) calculated?", "a": "ROI = (Net Annual Profit / Total Cost of Investment) * 100", "b": "ROI = (Gross Revenue / Variable Costs) * 100", "c": "ROI = (Fixed Assets / Current Liabilities) * 100", "d": "ROI = (Depreciation / Net Sales) * 100", "ans": "A"},
+{"unit": 4, "q": "If an entrepreneur invests Rs 10,00,000 into a manufacturing unit and earns a net annual profit of Rs 2,50,000, what is the ROI?", "a": "15%", "b": "20%", "c": "25%", "d": "40%", "ans": "C"},
+{"unit": 4, "q": "Return on Sales (ROS) measures an enterprise’s:", "a": "Total debt ratio", "b": "Operating efficiency by calculating profit generated per rupee of sales revenue", "c": "Factory physical square footage utilization", "d": "Speed of raw material transport", "ans": "B"},
+{"unit": 4, "q": "What is the mathematical representation of Return on Sales (ROS)?", "a": "(Net Operating Profit / Net Sales Revenue) * 100", "b": "(Total Liabilities / Total Equity) * 100", "c": "(Raw Material Cost / Units Sold) * 100", "d": "(Fixed Cost / Total Inventory) * 100", "ans": "A"},
+{"unit": 4, "q": "If an enterprise records annual net sales of Rs 50,00,000 and generates an operating profit of Rs 5,00,000, the ROS is:", "a": "5%", "b": "10%", "c": "15%", "d": "25%", "ans": "B"},
+{"unit": 3, "q": "The official portal initiated by the Ministry of MSME for online registration of micro, small, and medium enterprises is:", "a": "GSTN Portal", "b": "Udyam Registration Portal", "c": "MCA21 Portal", "d": "Income Tax e-Filing", "ans": "B"},
+{"unit": 3, "q": "Which national agency provides support for technical consultation, testing, and technology transfer to MSMEs?", "a": "National Small Industries Corporation (NSIC) / MSME-DFO", "b": "Insurance Regulatory and Development Authority (IRDAI)", "c": "Central Board of Film Certification (CBFC)", "d": "Telecom Regulatory Authority of India (TRAI)", "ans": "A"},
+{"unit": 3, "q": "What is the primary role of SIDBI (Small Industries Development Bank of India)?", "a": "Formulating agricultural monsoonal forecasts", "b": "Principal financial institution for promoting, financing, and developing the MSME sector", "c": "Regulating real estate housing colonies", "d": "Conducting national civil services entrance examinations", "ans": "B"},
+{"unit": 4, "q": "An enterprise that reduces its fixed costs while maintaining the same price and variable cost structure will experience:", "a": "A higher break-even point", "b": "A lower break-even point (reaches profitability sooner)", "c": "Zero change in break-even metrics", "d": "An immediate collapse of sales volume", "ans": "B"},
+{"unit": 3, "q": "Which agency offers dedicated support for testing and quality certification (such as ISI/BIS marks) for products?", "a": "Bureau of Indian Standards (BIS)", "b": "SEBI", "c": "Reserve Bank of India", "d": "National Highways Authority of India", "ans": "A"},
+{"unit": 3, "q": "A major benefit enjoyed by registered MSMEs under public procurement policies in India is:", "a": "Complete exemption from all product safety standards", "b": "Mandatory minimum percentage procurement quotas by CPSEs and tender fee exemptions", "c": "Immunity from commercial contract enforcement", "d": "Automatic allotment of free commercial airline cargo space", "ans": "B"},
+{"unit": 4, "q": "If an enterprise sells products above its Break-Even Point, the additional revenue generated over and above variable costs contributes directly to:", "a": "Fixed cost expansion", "b": "Net Operating Profit", "c": "Sunk assets", "d": "Depreciation charges", "ans": "B"},
+{"unit": 4, "q": "The ‘Margin of Safety’ in break-even analysis refers to:", "a": "The gap between maximum plant capacity and minimum building fire codes", "b": "The difference between actual/projected sales and break-even sales", "c": "The minimum insurance policy balance required by banks", "d": "The total quantity of reserve stock held against machine breakdowns", "ans": "B"},
+{"unit": 4, "q": "A high ROS accompanied by a declining ROI usually points toward:", "a": "Excellent inventory turnover", "b": "Inefficient use of heavy capital assets relative to the profit margins achieved", "c": "Zero corporate tax exposure", "d": "Rapid reduction in total fixed assets", "ans": "B"},
+{"unit": 3, "q": "Support provided by MSME Testing Centres (TCs) includes:", "a": "Auditing personal income tax returns", "b": "Providing specialized precision testing, calibration, and quality control assistance", "c": "Direct distribution of consumer goods", "d": "Regulating commercial banking interest rates", "ans": "B"},
+{"unit": 3, "q": "When an ancillary unit faces working capital lockups due to payment delays from large buyers, it can seek relief through:", "a": "The MSMED Act Micro & Small Enterprise Facilitation Council (MSEFC)", "b": "The International Maritime Court", "c": "The Geological Survey of India", "d": "The Directorate General of Foreign Trade exclusively", "ans": "A"},
+{"unit": 5, "q": "What is the main objective of a Techno-Commercial Feasibility Study?", "a": "To register trademarks in every foreign territory", "b": "To establish technical viability (engineering, processes, inputs) and commercial profitability (demand, economics, ROI)", "c": "To finalize employee uniforms and office wall colors", "d": "To eliminate all future taxation liabilities", "ans": "B"},
+{"unit": 5, "q": "Which form of business ownership provides limited liability protection to owners while maintaining flexible partnership structures?", "a": "Sole Proprietorship", "b": "Hindu Undivided Family (HUF)", "c": "Limited Liability Partnership (LLP)", "d": "Traditional Unregistered General Partnership", "ans": "C"},
+{"unit": 5, "q": "In a Sole Proprietorship, the owner’s liability for business debts is:", "a": "Limited strictly to the initial capital invested", "b": "Unlimited, extending to personal assets and property", "c": "Zero; liability is assumed by the local municipal corporation", "d": "Capped at Rs 1,00,000 by statute", "ans": "B"},
+{"unit": 5, "q": "What does the Unique Selling Proposition (USP) of an enterprise signify?", "a": "The standard wholesale discount given to distributors", "b": "The distinctive feature, benefit, or design that separates a product from its competitors in consumers’ minds", "c": "The mandatory registration number issued by tax authorities", "d": "The highest wholesale price permitted by fair trade legislation", "ans": "B"},
+{"unit": 5, "q": "The 4 Ps of a classic Marketing Mix framework are:", "a": "People, Process, Physical Evidence, Profit", "b": "Product, Price, Place, Promotion", "c": "Planning, Purchasing, Packaging, Performance", "d": "Patent, Policy, Production, Placement", "ans": "B"},
+{"unit": 5, "q": "An Executive Summary in a formalized Business Plan should be written:", "a": "First, before conducting any market or financial research", "b": "Last, synthesizing the core highlights, business model, and projections of the plan", "c": "Solely by external government loan auditors", "d": "Without mentioning financial metrics or business objectives", "ans": "B"},
+{"unit": 4, "q": "A Capital Budgeting decision typically involves:", "a": "Selecting the office stationary provider", "b": "Long-term investment decisions regarding heavy equipment, land, or plant modernization", "c": "Scheduling daily employee lunch shifts", "d": "Calculating minor postal dispatch fees", "ans": "B"},
+{"unit": 5, "q": "In business negotiations, the BATNA principle stands for:", "a": "Best Alternative To a Negotiated Agreement", "b": "Business Assessment Towards National Assets", "c": "Budget Allocation Techniques for New Assets", "d": "Basic Approach to Negotiation Agendas", "ans": "A"},
+{"unit": 5, "q": "Which negotiation technique involves splitting contentious package deals into smaller concessions to find common ground?", "a": "Extreme Stonewalling", "b": "Fractional / Logrolling bargaining", "c": "Take-it-or-leave-it hardball tactics", "d": "Complete submission", "ans": "B"},
+{"unit": 5, "q": "How do Angel Investors differ from Venture Capital (VC) firms?", "a": "Angel investors use institutional public pension funds; VCs use personal petty cash", "b": "Angel investors are typically high-net-worth individuals investing personal funds at early stages; VCs manage pooled institutional funds", "c": "Angel investors never acquire company equity", "d": "Venture Capitalists only invest after a company completes its IPO", "ans": "B"},
+{"unit": 5, "q": "What is the fundamental difference between an Incubation Center and an Accelerator?", "a": "Incubators only serve publicly listed MNCs; Accelerators work with university dropouts", "b": "Incubators nurture early-stage ideas over longer horizons (1-3 years); Accelerators offer fast-tracked, cohort-based scaling programs (3-6 months)", "c": "Incubators strictly offer debt financing; Accelerators provide real estate leases only", "d": "Incubators charge interest; Accelerators are charitable foundations", "ans": "B"},
+{"unit": 3, "q": "Atal Incubation Centres (AICs) have been established across India under the aegis of which initiative?", "a": "NITI Aayog’s Atal Innovation Mission (AIM)", "b": "Reserve Bank of India Financial Literacy Mission", "c": "Ministry of Civil Aviation", "d": "National Green Tribunal", "ans": "A"},
+{"unit": 4, "q": "A working capital budget estimates:", "a": "Multi-decade factory construction schedules", "b": "Short-term cash inflows and outflows required to fund day-to-day operations", "c": "Statutory life spans of proprietary patents", "d": "Equity stock options granted upon terminal buyout", "ans": "B"},
+{"unit": 5, "q": "In risk management, the strategy of purchasing insurance against catastrophic fire or plant equipment breakdown is termed:", "a": "Risk avoidance", "b": "Risk retention / absorption", "c": "Risk transference", "d": "Risk magnification", "ans": "C"},
+{"unit": 5, "q": "The concept of ‘Bootstrapping’ a startup means:", "a": "Securing Rs 100 Crores in venture debt on day one", "b": "Financing business launch and operations entirely through personal savings and lean, reinvested internal revenues", "c": "Selling equity to foreign sovereign wealth funds", "d": "Taking unmanageable high-interest predatory private loans", "ans": "B"},
+{"unit": 5, "q": "What is the ‘Burn Rate’ of a venture?", "a": "The physical fuel consumption rate of factory generator turbines", "b": "The rate at which an early-stage company spends its cash reserves to cover operational losses before achieving positive cash flows", "c": "The rate of scrap raw material lost during metal fabrication", "d": "The legal depreciation speed of office equipment", "ans": "B"},
+{"unit": 5, "q": "A ‘Pivot’ by a startup refers to:", "a": "Liquidating the business entirely and filing for corporate insolvency", "b": "Making a structured course correction to the business model or product based on customer feedback and validated metrics", "c": "Firing the entire original technical engineering crew", "d": "Relocating office equipment within the same physical room", "ans": "B"},
+{"unit": 5, "q": "A competitive advantage based on ‘Cost Leadership’ focuses on:", "a": "Selling at the absolute highest market price via ultra-luxury prestige branding", "b": "Achieving the lowest operational and manufacturing costs in the industry to offer competitive pricing", "c": "Outspending all competitors on cinematic television advertisements", "d": "Offering bespoke customized items with long assembly lead times", "ans": "B"},
+{"unit": 5, "q": "What is a ‘Term Sheet’ presented by a venture capitalist?", "a": "A court summons for business debt defaults", "b": "A non-binding preliminary agreement outlining the core terms, valuation, and conditions of a proposed investment", "c": "An electricity utility bill for commercial premises", "d": "An employee handbook detailing working shift hours", "ans": "B"},
+{"unit": 5, "q": "Which of the following is considered an equity financing route?", "a": "Commercial bank term loans", "b": "Collateralized equipment leasing", "c": "Issuing common shares to Angel Investors in exchange for capital", "d": "Bank overdraft cash-credit limits", "ans": "C"},
+{"unit": 5, "q": "A market penetration pricing strategy involves:", "a": "Setting an initially low price to attract large volumes, build market share, and discourage rivals", "b": "Setting the highest possible skimming price to recover R&D costs from early innovators", "c": "Pricing completely at random without monitoring unit manufacturing costs", "d": "Matching competitor prices without tracking internal margins", "ans": "A"},
+{"unit": 5, "q": "In a Private Limited Company, what restriction is placed on ownership share transfers?", "a": "Shares can be openly traded on public stock exchanges by any retail customer", "b": "Share transfers are restricted per company Articles of Association (AoA) and cannot be publicly traded", "c": "No shares can ever be issued to founders", "d": "Ownership is automatically transferred to municipal trusts after three years", "ans": "B"},
+{"unit": 5, "q": "What is the role of an Angel Network/Syndicate?", "a": "Regulating national foreign policy", "b": "Pooling capital, due diligence expertise, and networks from multiple private investors to back startups", "c": "Printing currency notes for micro-credit cooperatives", "d": "Enforcing municipal shop license closures", "ans": "B"},
+{"unit": 5, "q": "What does the ‘Runway’ of a startup describe?", "a": "The length of dedicated freight loading docks in an industrial warehouse", "b": "The number of months a startup can continue operating at its current burn rate before exhausting its cash reserves", "c": "The highway distance to the nearest regional cargo airport", "d": "The total number of registered retail storefronts nationwide", "ans": "B"},
+{"unit": 4, "q": "In business planning, sensitivity analysis evaluates:", "a": "How variations in key assumptions (e.g., sales volume, material costs) affect financial viability and profitability", "b": "The emotional well-being of the executive founding members", "c": "The ambient temperature sensitivity of factory HVAC units", "d": "How competitors react to social media ad campaigns", "ans": "A"}
+];
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let quiz = [], current = 0, score = 0, wrong = 0, skipped = 0;
+let timerSec = 0, timerInterval = null, answered = false;
+let results = [], currentShuffledOptions = [];
+let mode = 'all';
+const TOTAL = ALL_QUESTIONS.length;
+let useAI = false;
+let sampleFn = null;
+(async () => {
+  try { sampleFn = (window.claude && await window.claude.use('sample')) || null; } catch (e) { sampleFn = null; }
+  const r = document.getElementById('ai-row'); if (r) r.style.display = sampleFn ? 'flex' : 'none';
+})();
+
+/* ═══════════════════════════════════
+   QUESTION SELECTION
+═══════════════════════════════════ */
+function setMode(m) {
+  mode = m;
+  ['all','range','custom'].forEach(k => document.getElementById('mode-'+k).classList.toggle('selected', k === m));
+  document.getElementById('range-box').style.display = m === 'range' ? 'block' : 'none';
+  document.getElementById('custom-box').style.display = m === 'custom' ? 'block' : 'none';
+  updateSelInfo();
+}
+function setRange(a, b) {
+  document.getElementById('range-from').value = a;
+  document.getElementById('range-to').value = Math.min(b, TOTAL);
+  updateSelInfo();
+}
+function getSelection() {
+  if (mode === 'all') return { nums: Array.from({length: TOTAL}, (_, i) => i + 1) };
+  if (mode === 'range') {
+    const a = parseInt(document.getElementById('range-from').value);
+    const b = parseInt(document.getElementById('range-to').value);
+    if (isNaN(a) || isNaN(b)) return { nums: [], error: 'Enter both From and To numbers' };
+    if (a < 1 || b > TOTAL) return { nums: [], error: `Numbers must be between 1 and ${TOTAL}` };
+    if (a > b) return { nums: [], error: '"From" must not be greater than "To"' };
+    return { nums: Array.from({length: b - a + 1}, (_, i) => a + i) };
+  }
+  const raw = document.getElementById('custom-input').value.trim();
+  if (!raw) return { nums: [], error: 'Type question numbers, e.g. 1-10, 25, 40-50' };
+  const set = new Set();
+  for (const part of raw.split(/[,;\s]+/).filter(Boolean)) {
+    const m = part.match(/^(\d+)(?:\s*[-–]\s*(\d+))?$/);
+    if (!m) return { nums: [], error: `Can't understand "${part}"` };
+    const a = parseInt(m[1]), b = m[2] ? parseInt(m[2]) : a;
+    if (a < 1 || b > TOTAL || a > b) return { nums: [], error: `"${part}" is out of range (1–${TOTAL})` };
+    for (let n = a; n <= b; n++) set.add(n);
+  }
+  return { nums: [...set].sort((x, y) => x - y) };
+}
+function getNumQs(poolSize) {
+  const v = document.getElementById('num-qs').value;
+  if (v === '0') return poolSize;
+  if (v === 'custom') {
+    const n = parseInt(document.getElementById('num-custom').value);
+    return isNaN(n) || n < 1 ? 0 : Math.min(n, poolSize);
+  }
+  return Math.min(parseInt(v), poolSize);
+}
+function onNumChange() {
+  document.getElementById('num-custom').style.display = document.getElementById('num-qs').value === 'custom' ? 'block' : 'none';
+  updateSelInfo();
+}
+function updateSelInfo() {
+  const sel = getSelection();
+  const info = document.getElementById('sel-info');
+  const btn = document.getElementById('start-btn');
+  if (sel.error || sel.nums.length === 0) {
+    info.textContent = '⚠️ ' + (sel.error || 'No questions selected');
+    info.classList.add('err'); btn.disabled = true;
+  } else {
+    const n = getNumQs(sel.nums.length);
+    if (n === 0) { info.textContent = '⚠️ Enter a valid number of questions'; info.classList.add('err'); btn.disabled = true; return; }
+    info.classList.remove('err');
+    info.textContent = n < sel.nums.length
+      ? `${n} random questions will be picked from ${sel.nums.length} selected`
+      : `${sel.nums.length} question${sel.nums.length > 1 ? 's' : ''} selected`;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('ai-toggle').addEventListener('change', function() {
+  document.getElementById('ai-count-row').style.display = this.checked ? 'block' : 'none';
+  useAI = this.checked;
+});
+
+/* ═══════════════════════════════════
+   AI QUESTION GENERATION (Real API)
+═══════════════════════════════════ */
+async function generateAIQuestions(count) {
+  const prompt = `You are an expert educator for Entrepreneurship Development (ED) for diploma engineering students in India (MSME, startups, project planning, break-even/ROI, support agencies).
+
+Generate exactly ${count} unique multiple choice questions (MCQs) based on these topics:
+${AI_TOPICS}
+
+Requirements:
+- Each question must be DIFFERENT from standard textbook questions — add variety
+- Include conceptual, application-based, numerical, and assertion-type questions
+- Mix difficulty: easy (30%), medium (50%), hard (20%)
+- All answers must be factually correct and suitable for diploma level
+- Include a brief explanation for each correct answer
+
+Return ONLY a valid JSON array. No markdown fences, no extra text. Format:
+[
+  {
+        "q": "Question text",
+    "a": "Option A text",
+    "b": "Option B text",
+    "c": "Option C text",
+    "d": "Option D text",
+    "ans": "A",
+    "explanation": "Brief explanation of why this is correct"
+  }
+]`;
+
+  // Step animation
+  animateStep(1);
+  await delay(600);
+  animateStep(2);
+
+  if (!sampleFn) throw new Error('AI not available');
+  const res = await sampleFn(prompt, { cache: false });
+  animateStep(3);
+  let text = (res && res.text) || '';
+  text = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  const start = text.indexOf('[');
+  const end = text.lastIndexOf(']');
+  if (start === -1 || end === -1) throw new Error('No JSON array in response');
+  const parsed = JSON.parse(text.slice(start, end + 1));
+
+  animateStep(4);
+  await delay(400);
+  return parsed.map(q => ({ ...q, isAI: true }));
+}
+
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function animateStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`step${i}`);
+    if (!el) continue;
+    if (i < n) el.className = 'ai-step done';
+    else if (i === n) el.className = 'ai-step active';
+    else el.className = 'ai-step';
+  }
+}
+
+/* ═══════════════════════════════════
+   QUIZ LOGIC
+═══════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledOptions(q) {
+  const correctKey = q.ans.toLowerCase();
+  const opts = ['a','b','c','d'].map(k => ({ key:k, text:q[k], isCorrect: k === correctKey }));
+  return shuffle(opts);
+}
+
+async function startQuiz() {
+  const sel = getSelection();
+  if (sel.error || sel.nums.length === 0) { showToast(sel.error || 'Select at least one question!', 'bad'); return; }
+
+  timerSec = parseInt(document.getElementById('timer-opt').value);
+  const aiCount = useAI ? (parseInt(document.getElementById('ai-count').value) || 10) : 0;
+
+  let staticQuiz = sel.nums.map(n => ({ ...ALL_QUESTIONS[n - 1], num: n }));
+  const wantN = getNumQs(staticQuiz.length);
+  if (wantN === 0) { showToast('Enter a valid number of questions', 'bad'); return; }
+  if (wantN < staticQuiz.length) staticQuiz = shuffle(staticQuiz).slice(0, wantN).sort((a, b) => a.num - b.num);
+  if (document.getElementById('order-opt').value === 'shuffle') staticQuiz = shuffle(staticQuiz);
+
+  current = 0; score = 0; wrong = 0; skipped = 0; results = [];
+
+  if (useAI && aiCount > 0) {
+    // Show AI loading screen
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('ai-gen-screen').style.display = 'block';
+
+    let aiQs = [];
+    try {
+      aiQs = await generateAIQuestions(aiCount);
+      showToast(`✨ ${aiQs.length} AI questions generated!`, 'good');
+    } catch (e) {
+      console.warn('AI generation failed:', e);
+      showToast('AI unavailable – using question bank only', 'bad');
+    }
+
+    // Interleave AI questions: insert every ~3 static questions
+    if (aiQs.length > 0) {
+      const shuffledAI = shuffle(aiQs);
+      const merged = [];
+      let aiIdx = 0;
+      for (let i = 0; i < staticQuiz.length; i++) {
+        merged.push(staticQuiz[i]);
+        if ((i + 1) % 3 === 0 && aiIdx < shuffledAI.length) {
+          merged.push(shuffledAI[aiIdx++]);
+        }
+      }
+      // Append remaining AI questions
+      while (aiIdx < shuffledAI.length) merged.push(shuffledAI[aiIdx++]);
+      quiz = merged;
+    } else {
+      quiz = staticQuiz;
+    }
+
+    document.getElementById('ai-gen-screen').style.display = 'none';
+  } else {
+    quiz = staticQuiz;
+    document.getElementById('start-screen').style.display = 'none';
+  }
+
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  clearInterval(timerInterval);
+
+  if (current >= quiz.length) { showResults(); return; }
+  const q = quiz[current];
+
+  const total = quiz.length;
+  const pct = (current / total) * 100;
+
+  document.getElementById('q-label').textContent = `Q${current + 1}`;
+  document.getElementById('prog-text').textContent = `Question ${current + 1} of ${total}`;
+  document.getElementById('score-live').textContent = `Score: ${score}`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  const aiBadge = document.getElementById('ai-badge');
+  aiBadge.style.display = q.isAI ? 'inline-block' : 'none';
+
+  document.getElementById('q-chapter-label').textContent = q.num ? `📌 Question bank No. ${q.num}` : '';
+  document.getElementById('question-text').textContent = q.q;
+
+  currentShuffledOptions = buildShuffledOptions(q);
+  const labels = ['A','B','C','D'];
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  currentShuffledOptions.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.onclick = () => selectAnswer(opt, btn, q);
+    btn.innerHTML = `<span class="opt-label">${labels[idx]}</span><span>${esc(opt.text)}</span>`;
+    btn.dataset.isCorrect = opt.isCorrect ? '1' : '0';
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('explanation').style.display = 'none';
+  document.getElementById('skip-msg').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'block';
+
+  const timerEl = document.getElementById('timer-badge');
+  if (timerSec > 0) {
+    timerEl.style.display = 'inline-block';
+    let remaining = timerSec;
+    updateTimerUI(timerEl, remaining);
+    timerInterval = setInterval(() => {
+      remaining--;
+      updateTimerUI(timerEl, remaining);
+      if (remaining <= 0) { clearInterval(timerInterval); if (!answered) autoSkip(q); }
+    }, 1000);
+  } else {
+    timerEl.style.display = 'none';
+  }
+}
+
+function updateTimerUI(el, sec) {
+  el.textContent = `⏱ ${sec}s`;
+  el.className = sec <= 7 ? 'timer-badge danger' : 'timer-badge';
+}
+
+function selectAnswer(opt, btn, q) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const correctOpt = currentShuffledOptions.find(o => o.isCorrect);
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'block';
+  document.getElementById('timer-badge').className = 'timer-badge';
+
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.isCorrect === '1') b.classList.add(opt.isCorrect ? 'correct' : 'reveal');
+  });
+
+  const expEl = document.getElementById('explanation');
+  if (opt.isCorrect) {
+    score++;
+    btn.classList.add('correct');
+    expEl.className = 'explanation ok';
+    let msg = `✅ Correct! The answer is: ${correctOpt.text}.`;
+    if (q.explanation) msg += ` ${q.explanation}`;
+    expEl.textContent = msg;
+    results.push({ q: q.q, num: q.num, status: 'correct', correctText: correctOpt.text, yourText: opt.text, isAI: !!q.isAI });
+  } else {
+    wrong++;
+    btn.classList.add('wrong');
+    expEl.className = 'explanation err';
+    let msg = `❌ Incorrect. The right answer is: ${correctOpt.text}.`;
+    if (q.explanation) msg += ` ${q.explanation}`;
+    expEl.textContent = msg;
+    results.push({ q: q.q, num: q.num, status: 'wrong', correctText: correctOpt.text, yourText: opt.text, isAI: !!q.isAI });
+  }
+  expEl.style.display = 'block';
+  document.getElementById('score-live').textContent = `Score: ${score}`;
+}
+
+function skipQuestion() { if (!answered) autoSkip(quiz[current]); }
+
+function autoSkip(q) {
+  answered = true;
+  clearInterval(timerInterval);
+  skipped++;
+  const correctOpt = currentShuffledOptions.find(o => o.isCorrect);
+  document.querySelectorAll('.option-btn').forEach(b => { b.disabled = true; if (b.dataset.isCorrect === '1') b.classList.add('reveal'); });
+  document.getElementById('skip-ans').textContent = correctOpt.text;
+  document.getElementById('skip-msg').style.display = 'block';
+  document.getElementById('skip-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'block';
+  document.getElementById('timer-badge').className = 'timer-badge';
+  results.push({ q: q.q, num: q.num, status: 'skipped', correctText: correctOpt.text, yourText: null, isAI: !!q.isAI });
+}
+
+function nextQuestion() {
+  current++;
+  renderQuestion();
+}
+
+/* ═══════════════════════════════════
+   RESULTS
+═══════════════════════════════════ */
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('score-screen').style.display = 'block';
+
+  const total = results.length;
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+
+  const emojis = pct >= 80 ? '🏆' : pct >= 60 ? '💼' : pct >= 40 ? '📚' : '💪';
+  const titles = pct >= 80 ? 'Outstanding!' : pct >= 60 ? 'Good Job!' : pct >= 40 ? 'Keep Studying!' : "Don't Give Up!";
+  const subs   = pct >= 80 ? 'You are well prepared for the exam.' : pct >= 60 ? 'A bit more revision and you\'ll ace it.' : pct >= 40 ? 'Review the topics you missed.' : 'Practice makes perfect — try again!';
+
+  document.getElementById('res-emoji').textContent = emojis;
+  document.getElementById('res-title').textContent = titles;
+  document.getElementById('res-sub').textContent = subs;
+  document.getElementById('score-pct-txt').textContent = pct + '%';
+  document.getElementById('score-ring').style.setProperty('--pct', pct + '%');
+  document.getElementById('st-c').textContent = score;
+  document.getElementById('st-w').textContent = wrong;
+  document.getElementById('st-s').textContent = skipped;
+  document.getElementById('st-t').textContent = total;
+  document.getElementById('review-section').style.display = 'none';
+
+}
+
+function toggleReview() {
+  const sec = document.getElementById('review-section');
+  if (sec.style.display === 'none') { buildReview(); sec.style.display = 'block'; }
+  else { sec.style.display = 'none'; }
+}
+
+function buildReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  results.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item' + (r.status === 'wrong' ? ' rw' : r.status === 'skipped' ? ' rs' : '');
+    let body = `<div class="rq">Q${i+1}. ${esc(r.q)}${r.isAI ? ' <span style="color:#c084fc;font-size:10px;">✨AI</span>' : ''}</div>`;
+    if (r.status === 'correct') body += `<div class="rc">✅ ${esc(r.yourText)}</div>`;
+    else if (r.status === 'wrong') {
+      body += `<div class="ryr">❌ Your answer: ${esc(r.yourText)}</div>`;
+      body += `<div class="rc">✅ Correct: ${esc(r.correctText)}</div>`;
+    } else {
+      body += `<div class="rsk">⏩ Skipped — Correct: ${esc(r.correctText)}</div>`;
+    }
+    if (r.num) body += `<div class="runit">📌 Question bank No. ${r.num}</div>`;
+    div.innerHTML = body;
+    list.appendChild(div);
+  });
+}
+
+function restartQuiz() {
+  clearInterval(timerInterval);
+  document.getElementById('score-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+updateSelInfo();
+</script>
+</body>
+</html>
